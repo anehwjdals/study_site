@@ -1,0 +1,25 @@
+
+lgbm_params = {'n_estimators':[300, 500],
+
+               'learning_rate' : [0.1, 0.15],
+
+               'num_leaves' : [50, 60 ,70, 80],
+
+               'max_depth': [4, 5, 6],
+
+               'min_data_in_leaf' : [20],
+
+               'lambda_l1' : [0.05, 0.1, 1, 10, 30],
+
+               'lambda_l2' : [0.001,0.05, 0.1, 1, 10]
+
+              }
+start = time.time()
+
+lgbm = LGBMRegressor(n_jobs=-1, random_state=1217)
+grid_model = GridSearchCV(lgbm, param_grid = lgbm_params, scoring='neg_mean_squared_error', cv = 5)
+grid_model.fit(x_train, y_train)
+rmse = np.sqrt(-1*grid_model.best_score_)
+
+print("5CV 평균 RMSE : {:.3f}, 최적 params : {}".format(rmse,grid_model.best_params_))
+print("{:.3f}".format(time.time()-start))
